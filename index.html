@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AQA Core Maths Past Exam Question Selector</title>
+<style>
+:root{color-scheme:dark;--bg:#14171a;--card:#1f2428;--ink:#e8e8e4;--mut:#9aa4aa;--acc:#6bb3e0;--line:#343c42;--e:#7bc47f;--m:#e0a040;--h:#f08a82;--cd:#6bb3e0;--cf:#7bc47f;--ca:#b48ee0;--cp:#f08a82}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Georgia,serif}
+header{padding:18px 20px 0;border-bottom:1px solid var(--line);background:linear-gradient(#1b2025,var(--bg))}h1{margin:0 0 14px;font:400 26px/1.2 Georgia,serif;letter-spacing:.04em;color:var(--ink)}h1 .hl{color:var(--acc);font-weight:700}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}.tabs button{font:600 14px sans-serif;padding:8px 16px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:none;color:var(--mut);cursor:pointer}
+.tabs button.on{background:var(--card);color:var(--ink);border-bottom:2px solid var(--card);margin-bottom:-1px}
+.wrap{display:flex;flex-wrap:wrap;gap:16px;padding:16px;max-width:1300px;margin:auto}
+aside{flex:1 1 250px;max-width:310px}main{flex:3 1 400px;min-width:0}
+.box{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.box h3{margin:0 0 8px;font:600 13px sans-serif;text-transform:uppercase;color:var(--mut)}
+.chip{display:inline-block;margin:2px;padding:4px 9px;border:1.5px solid var(--line);border-radius:14px;font:13px sans-serif;cursor:pointer;background:none;color:var(--ink);text-align:left}
+.chip.cd{border-color:var(--cd);color:var(--cd)}.chip.cf{border-color:var(--cf);color:var(--cf)}.chip.ca{border-color:var(--ca);color:var(--ca)}.chip.cp{border-color:var(--cp);color:var(--cp)}
+.chip.on{background:var(--acc);color:var(--bg);border-color:var(--acc)}
+.chip.cd.on{background:var(--cd);color:var(--bg)}.chip.cf.on{background:var(--cf);color:var(--bg)}.chip.ca.on{background:var(--ca);color:var(--bg)}.chip.cp.on{background:var(--cp);color:var(--bg)}
+.lg{font:12px sans-serif;margin-bottom:6px}.lg b{margin-right:10px;white-space:nowrap}
+select,input{font:14px sans-serif;padding:4px;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:4px}
+button.act{display:inline-block;font:600 14px sans-serif;padding:8px 12px;border:0;border-radius:6px;background:var(--acc);color:var(--bg);cursor:pointer;margin:2px 0}
+.q{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:10px}
+.q.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.meta{font:12px sans-serif;color:var(--mut);display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:6px}
+.tag{padding:1px 7px;border-radius:10px;border:1px solid var(--line)}
+.tag.cd{color:var(--cd);border-color:var(--cd)}.tag.cf{color:var(--cf);border-color:var(--cf)}.tag.ca{color:var(--ca);border-color:var(--ca)}.tag.cp{color:var(--cp);border-color:var(--cp)}
+.tag.pm{color:var(--m);border-color:var(--m)}
+.d1{color:var(--e)}.d2{color:var(--m)}.d3{color:var(--h)}
+.qi{display:block;max-width:100%;height:auto;background:#fff;border-radius:4px}
+.ans{display:none;margin-top:8px}.q.show .ans{display:block}
+h3.ch{font:600 15px sans-serif;margin:18px 0 8px}h3.ch.cd{color:var(--cd)}h3.ch.cf{color:var(--cf)}h3.ch.ca{color:var(--ca)}h3.ch.cp{color:var(--cp)}
+.row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+#sheet{display:none}
+body.ws>*:not(#sheet){display:none}body.ws #sheet{display:block;background:#fff;color:#000;padding:16px;min-height:100vh}
+#sheet .pq{margin-bottom:18px;page-break-inside:avoid}@media print{.nop{display:none}#sheet{padding:0}}
+#gate{display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:var(--bg);z-index:9}
+body.locked #gate{display:flex}body.locked>*:not(#gate){display:none}
+#gate .gb{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:28px 32px;max-width:340px;text-align:center}
+#gate h2{margin:0 0 6px;font:400 20px Georgia,serif;letter-spacing:.03em}#gate p{font:13px sans-serif;color:var(--mut);margin:0 0 14px}
+#gate input[type=password]{width:100%;padding:9px;font-size:15px;margin-bottom:10px}#gate label{display:block;font:12px sans-serif;color:var(--mut);margin-bottom:12px}
+</style></head><body>
+<div id="gate"><div class="gb"><h2><span style="color:var(--acc);font-weight:700">AQA Core Maths</span><br>Past Exam Question Selector</h2><p>Enter the password to continue.</p>
+<input id="pw" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
+<label><input id="rem" type="checkbox"> Remember me on this device</label>
+<button class="act" onclick="tryLogin()">Enter</button><div id="gmsg" style="font:13px sans-serif;color:var(--h);margin-top:10px;min-height:18px"></div></div></div>
+<header><h1><span class="hl">AQA Core Maths</span> Past Exam Question Selector</h1><div class="tabs" id="tabs"></div></header>
+<div class="wrap">
+<aside>
+<div class="box"><h3>Textbook chapter</h3><div class="lg"><b style="color:var(--cd)">&#9632; Data &amp; statistics</b><b style="color:var(--cf)">&#9632; Money &amp; finance</b><b style="color:var(--ca)">&#9632; Modelling &amp; analysis</b><b style="color:var(--cp)">&#9632; Paper 2A topics</b></div><div id="topics"></div></div>
+<div class="box"><h3>Difficulty</h3><div id="diffs"></div></div>
+<div class="box"><h3>Paper &amp; marks</h3>
+<select id="pp"></select><br><br>
+Max marks <input id="maxm" type="number" min="1" value="20" style="width:60px"></div>
+<div class="box"><h3>Worksheet (<span id="cnt">0</span> q, <span id="tm">0</span> marks)</h3>
+<label><input type="checkbox" id="wans"> include mark schemes</label><br>
+<button class="act" onclick="printSheet()">Open worksheet / print</button><div id="msg" style="font:13px sans-serif;color:var(--h)"></div>
+<button class="act" style="background:var(--mut)" onclick="basket=[];save();render()">Clear selection</button></div>
+</aside>
+<main><div id="list"></div></main></div>
+<div id="sheet"></div>
+<script src="sha.js"></script>
+<script src="auth.js"></script>
+<script src="data.js"></script>
+<script>
+const TABS=[['All',null],['Paper 1','1'],['Paper 2A','2A']];
+const MON='June';
+const grp=c=>c<=4?'d':c<=9?'f':c<=11?'a':'p';
+const GH={d:'Paper 1 and Paper 2 common topics: data & statistics',f:'Paper 1 and Paper 2 common topics: money & finance',a:'Paper 1 and Paper 2 common topics: modelling & analysis',p:'Paper 2A topics'};
+const D=RAW.map(r=>({k:`${r[0]}_P${r[1]}_Q${r[2]}`,y:r[0],p:r[1],q:r[2],m:r[3],d:r[4],t:r[5],pm:r[6]}));
+const pl=q=>`${MON} ${q.y} Paper ${q.p}`;
+const lab=q=>`${pl(q)} Q${q.q}`;
+const img=(q,e)=>`<img class="qi" ${e?'':'loading="lazy" '}src="img/q/${q.k}.jpg" alt="${lab(q)}">`;
+const am=(q,e)=>`<img class="qi" style="border:1px solid #ccc" ${e?'':'loading="lazy" '}src="img/a/${q.k}.jpg" alt="Mark scheme ${lab(q)}">`;
+let S={};try{S=JSON.parse(localStorage.getItem('qbcm')||'{}')}catch(e){}
+let basket=(S.b||[]).filter(k=>D.some(q=>q.k==k)),tab=S.l||'All',fT=new Set(),fD=new Set(),lastC=0;
+const dn=['','Easy','Medium','Hard'];
+const save=()=>{try{localStorage.setItem('qbcm',JSON.stringify({b:basket,l:tab}))}catch(e){}};
+const tabP=()=>(TABS.find(t=>t[0]==tab)||TABS[0])[1];
+const cur=()=>D.filter(q=>!tabP()||q.p==tabP());
+const bt=q=>Math.min(...q.t);
+function build(){
+ tabs.innerHTML=TABS.map(([n,p])=>`<button class="${n==tab?'on':''}" data-l="${n}">${n} (${D.filter(q=>!p||q.p==p).length})</button>`).join('');
+ const Q=cur(),tl=[...new Set(Q.flatMap(q=>q.t))].sort((a,b)=>a-b);let lg='';
+ topics.innerHTML=tl.map(t=>{let h='';if(grp(t)!==lg){lg=grp(t);h='<div style="font:12px sans-serif;color:var(--mut);margin:8px 0 2px">'+GH[lg]+'</div>'}
+  return h+`<button class="chip c${grp(t)}${fT.has(t)?' on':''}" data-t="${t}">${t}. ${CH[t]} (${Q.filter(q=>q.t.includes(t)).length})</button>`}).join('');
+ diffs.innerHTML=[1,2,3].map(n=>`<button class="chip${fD.has(n)?' on':''}" data-d="${n}">${dn[n]}</button>`).join('');
+ const ps=[...new Set(Q.map(pl))];
+ pp.innerHTML='<option value="">All papers</option>'+ps.map(p=>`<option>${p}</option>`).join('')}
+document.addEventListener('click',e=>{
+ const l=e.target.closest('[data-l]');if(l){tab=l.dataset.l;fT.clear();fD.clear();save();build();render();return}
+ const c=e.target.closest('.chip');if(!c)return;
+ if(c.dataset.t){const k=+c.dataset.t;fT.has(k)?fT.delete(k):fT.add(k)}else{const k=+c.dataset.d;fD.has(k)?fD.delete(k):fD.add(k)}
+ c.classList.toggle('on');render()});
+pp.onchange=maxm.oninput=()=>render();
+function tog(k){const i=basket.indexOf(k);i<0?basket.push(k):basket.splice(i,1);save();render()}
+function ans(i){document.getElementById('q'+i).classList.toggle('show')}
+function hd(q){const t=fT.size?Math.min(...q.t.filter(x=>fT.has(x))):bt(q);if(t===lastC)return'';lastC=t;return`<h3 class="ch c${grp(t)}">Chapter ${t}: ${CH[t]}</h3>`}
+function render(){
+ const mx=+maxm.value||999;lastC=0;
+ const key=q=>fT.size?Math.min(...q.t.filter(x=>fT.has(x))):bt(q);
+ const L=cur().filter(q=>(!fT.size||q.t.some(t=>fT.has(t)))&&(!fD.size||fD.has(q.d))&&(!pp.value||pl(q)===pp.value)&&q.m<=mx)
+  .sort((a,b)=>key(a)-key(b)||a.y-b.y||(a.p>b.p?1:a.p<b.p?-1:0)||a.q-b.q);
+ list.innerHTML=L.length?L.map((q,n)=>hd(q)+`<div class="q${basket.includes(q.k)?' sel':''}" id="q${n}">
+ <div class="meta"><b>${lab(q)}</b><span>${q.m} marks</span><span class="d${q.d}">${dn[q.d]}</span>
+ ${q.t.map(t=>`<span class="tag c${grp(t)}">Ch ${t}: ${CH[t]}</span>`).join('')}${q.pm?`<span class="tag pm" title="This question refers to the Preliminary Material">Needs Preliminary Material: ${q.pm}</span>`:''}</div>
+ ${img(q)}<div class="ans">${am(q)}</div>
+ <div class="row"><button class="act" onclick="tog('${q.k}')">${basket.includes(q.k)?'Remove':'Add to worksheet'}</button>
+ <button class="act" style="background:var(--mut)" onclick="ans(${n})">Mark scheme</button></div></div>`).join(''):'<p>No questions match these filters.</p>';
+ cnt.textContent=basket.length;tm.textContent=basket.reduce((s,k)=>s+D.find(q=>q.k==k).m,0)}
+function body_(){const B=basket.map(k=>D.find(q=>q.k==k));
+ const pm=[...new Set(B.filter(q=>q.pm).map(q=>q.pm))];
+ return '<h2 style="font-family:sans-serif">Core Maths worksheet</h2>'+(pm.length?'<p style="font:12px sans-serif;color:#555">Preliminary Material needed for: '+pm.join('; ')+'</p>':'')+B.map((q,n)=>`<div class="pq"><div style="font:11px sans-serif;color:#555">Worksheet Q${n+1} · ${lab(q)} · ${q.m} marks</div>${img(q,1)}</div>`).join('')
+ +(wans.checked?'<h2 style="page-break-before:always;font-family:sans-serif">Mark schemes</h2>'+B.map((q,n)=>`<div class="pq"><div style="font:11px sans-serif;color:#555">Worksheet Q${n+1} · ${lab(q)}</div>${am(q,1)}</div>`).join(''):'')}
+function printSheet(){
+ if(!basket.length){msg.textContent='Add some questions to the worksheet first.';return}
+ msg.textContent='';
+ sheet.innerHTML='<div class="nop"><button class="act" onclick="closeSheet()">&larr; Back</button> <button class="act" onclick="try{window.print()}catch(e){}">Print / save as PDF</button> <button class="act" onclick="dl()">Download as HTML file</button><p style="font:13px sans-serif;color:#555">If Print does nothing here, use Download, open the downloaded file in your browser on this computer, then print (Ctrl/Cmd+P) and choose Save as PDF.</p></div>'+body_();
+ document.body.classList.add('ws');window.scrollTo(0,0)}
+function closeSheet(){document.body.classList.remove('ws')}
+function dl(){const base=location.href.replace(/[^/]*$/,'');const h='<!DOCTYPE html><meta charset="utf-8"><base href="'+base+'"><title>Core Maths worksheet</title><style>body{font:15px Georgia,serif;margin:20px}.pq{margin-bottom:18px;page-break-inside:avoid}img{max-width:100%}</style>'+body_();
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h],{type:'text/html'}));a.download='worksheet.html';document.body.appendChild(a);a.click();a.remove()}
+// Optional password gate: active only if sha.js and auth.js (from the A-level app) sit in the same folder
+const GATE=typeof AUTH!=='undefined'&&typeof hashPw==='function';
+function unlocked(){if(!GATE)return true;try{return localStorage.getItem('qb_ok')===AUTH.hash||sessionStorage.getItem('qb_ok')===AUTH.hash}catch(e){return false}}
+function go(){document.body.classList.remove('locked');build();render()}
+function tryLogin(){const p=pw.value;gmsg.textContent='Checking...';setTimeout(()=>{if(hashPw(p,AUTH.salt,AUTH.rounds)===AUTH.hash){try{(rem.checked?localStorage:sessionStorage).setItem('qb_ok',AUTH.hash)}catch(e){}pw.value='';gmsg.textContent='';go()}else{gmsg.textContent='Incorrect password.';pw.value=''}},30)}
+if(unlocked())go();else{document.body.classList.add('locked');setTimeout(()=>{try{pw.focus()}catch(e){}},50)}
+</script></body></html>
