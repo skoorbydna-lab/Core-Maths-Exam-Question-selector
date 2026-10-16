@@ -69,7 +69,7 @@ const GH={d:'Paper 1 and Paper 2 common topics: data & statistics',f:'Paper 1 an
 const D=RAW.map(r=>({k:`${r[0]}_P${r[1]}_Q${r[2]}`,y:r[0],p:r[1],q:r[2],m:r[3],d:r[4],t:r[5],pm:r[6]}));
 const pl=q=>`${MON} ${q.y} Paper ${q.p}`;
 const lab=q=>`${pl(q)} Q${q.q}`;
-const img=(q,e)=>`<img class="qi" ${e?'':'loading="lazy" '}src="Img/Q/${q.k}.jpg" alt="${lab(q)}">`;
+const img=(q,e)=>`<img class="qi" ${e?'':'loading="lazy" '}src="img/q/${q.k}.jpg" alt="${lab(q)}">`;
 const am=(q,e)=>`<img class="qi" style="border:1px solid #ccc" ${e?'':'loading="lazy" '}src="img/a/${q.k}.jpg" alt="Mark scheme ${lab(q)}">`;
 let S={};try{S=JSON.parse(localStorage.getItem('qbcm')||'{}')}catch(e){}
 let basket=(S.b||[]).filter(k=>D.some(q=>q.k==k)),tab=S.l||'All',fT=new Set(),fD=new Set(),lastC=0;
