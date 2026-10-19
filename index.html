@@ -27,7 +27,7 @@ button.act{display:inline-block;font:600 14px sans-serif;padding:8px 12px;border
 .tag.pm{color:var(--m);border-color:var(--m)}
 .d1{color:var(--e)}.d2{color:var(--m)}.d3{color:var(--h)}
 .qi{display:block;max-width:100%;height:auto;background:#fff;border-radius:4px}
-.ans{display:none;margin-top:8px}.q.show .ans{display:block}
+.ans,.pmx{display:none;margin-top:8px}.q.show .ans{display:block}.q.showpm .pmx{display:block}.pmx .qi+.qi{margin-top:6px}
 h3.ch{font:600 15px sans-serif;margin:18px 0 8px}h3.ch.cd{color:var(--cd)}h3.ch.cf{color:var(--cf)}h3.ch.ca{color:var(--ca)}h3.ch.cp{color:var(--cp)}
 .row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 #sheet{display:none}
@@ -62,15 +62,18 @@ Max marks <input id="maxm" type="number" min="1" value="20" style="width:60px"><
 <script src="auth.js"></script>
 <script src="data.js"></script>
 <script>
+// Image folder names (GitHub folders are case-sensitive: change these if yours are named differently, e.g. 'img/Q/')
+const IMGQ='img/q/',IMGA='img/a/',IMGP='img/p/';
 const TABS=[['All',null],['Paper 1','1'],['Paper 2A','2A']];
 const MON='June';
 const grp=c=>c<=4?'d':c<=9?'f':c<=11?'a':'p';
 const GH={d:'Paper 1 and Paper 2 common topics: data & statistics',f:'Paper 1 and Paper 2 common topics: money & finance',a:'Paper 1 and Paper 2 common topics: modelling & analysis',p:'Paper 2A topics'};
-const D=RAW.map(r=>({k:`${r[0]}_P${r[1]}_Q${r[2]}`,y:r[0],p:r[1],q:r[2],m:r[3],d:r[4],t:r[5],pm:r[6]}));
+const D=RAW.map(r=>({k:`${r[0]}_P${r[1]}_Q${r[2]}`,y:r[0],p:r[1],q:r[2],m:r[3],d:r[4],t:r[5],pm:r[6],pg:r[7]||[]}));
 const pl=q=>`${MON} ${q.y} Paper ${q.p}`;
 const lab=q=>`${pl(q)} Q${q.q}`;
-const img=(q,e)=>`<img class="qi" ${e?'':'loading="lazy" '}src="img/q/${q.k}.jpg" alt="${lab(q)}">`;
-const am=(q,e)=>`<img class="qi" style="border:1px solid #ccc" ${e?'':'loading="lazy" '}src="img/a/${q.k}.jpg" alt="Mark scheme ${lab(q)}">`;
+const img=(q,e)=>`<img class="qi" ${e?'':'loading="lazy" '}src="${IMGQ}${q.k}.jpg" alt="${lab(q)}">`;
+const am=(q,e)=>`<img class="qi" style="border:1px solid #ccc" ${e?'':'loading="lazy" '}src="${IMGA}${q.k}.jpg" alt="Mark scheme ${lab(q)}">`;
+const pmi=(q,e)=>q.pg.map(n=>`<img class="qi" style="border:1px solid #ccc" ${e?'':'loading="lazy" '}src="${IMGP}${q.y}_P${q.p}_p${n}.jpg" alt="Preliminary Material ${pl(q)} page ${n}">`).join('');
 let S={};try{S=JSON.parse(localStorage.getItem('qbcm')||'{}')}catch(e){}
 let basket=(S.b||[]).filter(k=>D.some(q=>q.k==k)),tab=S.l||'All',fT=new Set(),fD=new Set(),lastC=0;
 const dn=['','Easy','Medium','Hard'];
@@ -94,6 +97,7 @@ document.addEventListener('click',e=>{
 pp.onchange=maxm.oninput=()=>render();
 function tog(k){const i=basket.indexOf(k);i<0?basket.push(k):basket.splice(i,1);save();render()}
 function ans(i){document.getElementById('q'+i).classList.toggle('show')}
+function pmx(i){document.getElementById('q'+i).classList.toggle('showpm')}
 function hd(q){const t=fT.size?Math.min(...q.t.filter(x=>fT.has(x))):bt(q);if(t===lastC)return'';lastC=t;return`<h3 class="ch c${grp(t)}">Chapter ${t}: ${CH[t]}</h3>`}
 function render(){
  const mx=+maxm.value||999;lastC=0;
@@ -102,15 +106,15 @@ function render(){
   .sort((a,b)=>key(a)-key(b)||a.y-b.y||(a.p>b.p?1:a.p<b.p?-1:0)||a.q-b.q);
  list.innerHTML=L.length?L.map((q,n)=>hd(q)+`<div class="q${basket.includes(q.k)?' sel':''}" id="q${n}">
  <div class="meta"><b>${lab(q)}</b><span>${q.m} marks</span><span class="d${q.d}">${dn[q.d]}</span>
- ${q.t.map(t=>`<span class="tag c${grp(t)}">Ch ${t}: ${CH[t]}</span>`).join('')}${q.pm?`<span class="tag pm" title="This question refers to the Preliminary Material">Needs Preliminary Material: ${q.pm}</span>`:''}</div>
- ${img(q)}<div class="ans">${am(q)}</div>
+ ${q.t.map(t=>`<span class="tag c${grp(t)}">Ch ${t}: ${CH[t]}</span>`).join('')}${q.pm?`<span class="tag pm" title="This question refers to the Preliminary Material">Uses Preliminary Material: ${q.pm}</span>`:''}</div>
+ ${img(q)}<div class="pmx">${pmi(q)}</div><div class="ans">${am(q)}</div>
  <div class="row"><button class="act" onclick="tog('${q.k}')">${basket.includes(q.k)?'Remove':'Add to worksheet'}</button>
- <button class="act" style="background:var(--mut)" onclick="ans(${n})">Mark scheme</button></div></div>`).join(''):'<p>No questions match these filters.</p>';
+ ${q.pg.length?`<button class="act" style="background:var(--m)" onclick="pmx(${n})">Preliminary Material</button>`:''}<button class="act" style="background:var(--mut)" onclick="ans(${n})">Mark scheme</button></div></div>`).join(''):'<p>No questions match these filters.</p>';
  cnt.textContent=basket.length;tm.textContent=basket.reduce((s,k)=>s+D.find(q=>q.k==k).m,0)}
 function body_(){const B=basket.map(k=>D.find(q=>q.k==k));
- const pm=[...new Set(B.filter(q=>q.pm).map(q=>q.pm))];
- return '<h2 style="font-family:sans-serif">Core Maths worksheet</h2>'+(pm.length?'<p style="font:12px sans-serif;color:#555">Preliminary Material needed for: '+pm.join('; ')+'</p>':'')+B.map((q,n)=>`<div class="pq"><div style="font:11px sans-serif;color:#555">Worksheet Q${n+1} · ${lab(q)} · ${q.m} marks</div>${img(q,1)}</div>`).join('')
- +(wans.checked?'<h2 style="page-break-before:always;font-family:sans-serif">Mark schemes</h2>'+B.map((q,n)=>`<div class="pq"><div style="font:11px sans-serif;color:#555">Worksheet Q${n+1} · ${lab(q)}</div>${am(q,1)}</div>`).join(''):'')}
+ const pgs=[];B.forEach(q=>q.pg.forEach(n=>{const k=q.y+'_P'+q.p+'_p'+n;if(!pgs.some(x=>x.k==k))pgs.push({k,q,n})}));
+ return '<h2 style="font-family:sans-serif">Core Maths worksheet</h2>'+B.map((q,n)=>`<div class="pq"><div style="font:11px sans-serif;color:#555">Worksheet Q${n+1} · ${lab(q)} · ${q.m} marks</div>${img(q,1)}</div>`).join('')
+ +(pgs.length?'<h2 style="page-break-before:always;font-family:sans-serif">Preliminary Material</h2>'+pgs.map(x=>`<div class="pq"><div style="font:11px sans-serif;color:#555">${pl(x.q)} Preliminary Material, page ${x.n}</div><img class="qi" style="border:1px solid #ccc" src="${IMGP}${x.k}.jpg" alt="Preliminary Material"></div>`).join(''):'')+(wans.checked?'<h2 style="page-break-before:always;font-family:sans-serif">Mark schemes</h2>'+B.map((q,n)=>`<div class="pq"><div style="font:11px sans-serif;color:#555">Worksheet Q${n+1} · ${lab(q)}</div>${am(q,1)}</div>`).join(''):'')}
 function printSheet(){
  if(!basket.length){msg.textContent='Add some questions to the worksheet first.';return}
  msg.textContent='';
