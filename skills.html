@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AQA Core Maths Skills Generator</title>
+<style>
+:root{--bg:#14171c;--pn:#1d2128;--ln:#323945;--tx:#ebe8e2;--mu:#98a0ad;--d:#6bb3e0;--f:#7bc47f;--a:#b48ee0;--p:#f08a82;--ch:#f0b860;--fs:1.6rem}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--ln);background:var(--pn)}
+h1{font:600 1.15rem Georgia,serif;margin:0 12px 0 0}
+.sites{display:flex;gap:6px;flex-wrap:wrap;margin-right:8px}.sites a{color:var(--tx);text-decoration:none;font-size:.85rem;font-weight:600;border:1px solid var(--ln);border-radius:999px;padding:5px 11px;background:var(--bg)}.sites a:hover{border-color:var(--d);color:var(--d)}
+.tabs button,select,.act{background:var(--bg);color:var(--tx);border:1px solid var(--ln);border-radius:6px;padding:7px 12px;font:inherit;cursor:pointer}
+.act{background:var(--tx);color:var(--bg);font-weight:600}
+select{max-width:300px}label{color:var(--mu);font-size:.85rem}
+main{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px 16px}
+.col{border:1px solid var(--ln);border-radius:8px;background:var(--pn);padding:10px 16px}
+.col h2{margin:4px 0 10px;font:600 1.3rem Georgia,serif;border-bottom:3px solid var(--cc);padding-bottom:6px}
+.q{display:flex;gap:14px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--ln);font:var(--fs)/1.9 Georgia,"Cambria Math",serif}
+.q:last-child{border:0}
+.n{flex:none;min-width:2.3ch;text-align:center;border:2px solid var(--cc);color:var(--cc);border-radius:50%;font:600 .8em system-ui;cursor:pointer;line-height:1.7;background:none}
+.n:hover{background:var(--cc);color:var(--bg)}
+.t{cursor:pointer;flex:1}.q.open .a{display:block}.a{display:none;color:var(--f);font-size:.85em}.ans .a{display:block}
+sup{font-size:.65em;line-height:0}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.25;margin:0 2px}
+.fr>i{font-style:normal;border-bottom:1.5px solid currentColor;padding:0 3px}.fr>b{font-weight:400;padding:0 3px}
+.rt{display:inline-flex;align-items:stretch;margin:0 2px}.rt .rd{width:.62em;font-weight:400;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M2 60 L20 54 L44 94 L100 3' fill='none' stroke='black' stroke-width='2.4' vector-effect='non-scaling-stroke' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M2 60 L20 54 L44 94 L100 3' fill='none' stroke='black' stroke-width='2.4' vector-effect='non-scaling-stroke' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}.rt .rc{font-style:normal;border-top:.075em solid currentColor;padding:0 .12em 0 .04em;margin-left:-.04em}
+.mx{display:inline-grid;vertical-align:middle;border-left:2px solid currentColor;border-right:2px solid currentColor;border-radius:7px;padding:0 7px;margin:0 3px;gap:0 14px;line-height:1.45;text-align:center}.mx i{font-style:normal}
+.msg{grid-column:1/-1;color:var(--mu);text-align:center;padding:50px 10px;font-size:1.1rem}
+#mix{padding:12px 16px;background:var(--pn);border-bottom:1px solid var(--ln);columns:3 270px;font-size:.9rem}#mix details{break-inside:avoid;margin-bottom:6px}#mix .dis{color:var(--mu)}#mix .bar{column-span:all;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+body{--sc:var(--d)}
+#ch,#sb{border:2px solid var(--sc);color:var(--sc);font-weight:600}#ch option,#sb option{background:var(--pn);color:var(--tx)}
+#ch option.cd,#ch optgroup.cd,#mix .cd{color:var(--d)}#ch option.cf,#ch optgroup.cf,#mix .cf{color:var(--f)}#ch option.ca,#ch optgroup.ca,#mix .ca{color:var(--a)}#ch option.cp,#ch optgroup.cp,#mix .cp{color:var(--p)}
+#go{background:var(--sc);color:#0b0d10}#mx{border-color:var(--sc)!important}
+#mix details{border-left:4px solid var(--ln);padding-left:8px}#mix details.cd{border-color:var(--d)}#mix details.cf{border-color:var(--f)}#mix details.ca{border-color:var(--a)}#mix details.cp{border-color:var(--p)}
+#mix label.cd:not(.dis){color:var(--d)}#mix label.cf:not(.dis){color:var(--f)}#mix label.ca:not(.dis){color:var(--a)}#mix label.cp:not(.dis){color:var(--p)}
+#hc{background:var(--bg)!important;color:var(--tx)!important;border:1px solid var(--ln)!important}
+body.hid header>*:not(h1):not(#hc){display:none!important}body.hid #mix{display:none}body.hid header{padding:4px 16px}
+@media(max-width:700px){main{grid-template-columns:1fr}}
+.n{font-family:system-ui}
+@media print{body{background:#fff;color:#000}header{display:none}.col,.q{border-color:#999;background:#fff}.n{color:#000;border-color:#000}.a{color:#060}}
+</style></head><body>
+<header>
+<h1>AQA Core Maths Skills Generator</h1>
+<span class="sites"><a href="index.html">📝 Exam Question Selector</a><a href="quiz.html">Σ Core Maths Quiz</a></span>
+<select id="ch" aria-label="Chapter"></select>
+<select id="sb" aria-label="Subsection"></select>
+<button class="act" id="hc" title="Hide or show the controls">Hide controls</button>
+<button class="act" id="mx" style="background:var(--bg);color:var(--tx);border:1px solid var(--ln)">Mix topics</button>
+<label>Questions <select id="nq"></select></label>
+<button class="act" id="go">New questions</button>
+<button class="act" id="sa" style="background:var(--bg);color:var(--tx);border:1px solid var(--ln)">Show answers</button>
+<button class="act" id="pr" style="background:var(--bg);color:var(--tx);border:1px solid var(--ln)">Print</button>
+<button class="act" id="fm" style="background:var(--bg);color:var(--tx);border:1px solid var(--ln)" title="Smaller text">A−</button><button class="act" id="fp" style="background:var(--bg);color:var(--tx);border:1px solid var(--ln)" title="Larger text">A+</button>
+<span style="color:var(--mu);font-size:.8rem">Click a question for its answer · click its number to swap it</span>
+</header>
+<div id="mix" hidden></div>
+<main id="m"></main>
+<script src="core-gen.js"></script>
+<script>
+// app
+const M=new Set();let FZ=1,ci=0,Q=[[],[]];
+const $=id=>document.getElementById(id),sub=()=>CH[ci];
+const key=(i)=>KK(sub(),i);
+function build(){let h="";
+ for(const s of["d","f","a","p"]){const l=CH.map((c,i)=>[c,i]).filter(x=>x[0].s==s);if(l.length)h+=`<optgroup class="c${s}" label="${SN[s]}">`+l.map(([c,i])=>`<option class="c${s}" value="${i}">${c.n}. ${c.nm}</option>`).join("")+"</optgroup>"}
+ $("ch").innerHTML=h;$("ch").value=ci;fillSub();
+}
+function fillSub(){const c=sub();$("sb").innerHTML=`<option value="-1">All subsections</option>`+c.sb.map((s,i)=>`<option class="c${c.s}" value="${i}">${c.n}.${i+1} ${s}</option>`).join("");}
+function pool(L){const v=+$("sb").value;const o=(M.size?[...M]:(v<0?sub().sb.map((_,i)=>i):[v]).map(key)).filter(k=>G[k]).map(k=>[].concat(L&&GC[k]?GC[k]:G[k])).filter(a=>a.length);return o}
+function one(L,col){const fs_=pool(L).flat(),used=Q[col].map(x=>x.f),fresh=fs_.filter(f=>!used.includes(f)),c=fresh.length?fresh:fs_,sg_=t=>t.replace(/[0-9.]+/g,"#");let q;for(let k=0;k<40;k++){const f=pick(c);q=f(L);q.f=f;if(!Q[col].some(x=>x[0]==q[0]||(k<25&&sg_(x[0])==sg_(q[0]))))break}return q}
+function gen(){const n=+$("nq").value;Q=[[],[]];if(pool().length)for(let c=0;c<2;c++)for(let i=0;i<n;i++)Q[c].push(one(c,c));draw()}
+function fs(){const n=Q[0].length||5;document.documentElement.style.setProperty("--fs",((n<=3?2.1:n<=5?1.7:n<=7?1.45:1.25)*FZ)+"rem")}
+function draw(){const m=$("m"),c=sub(),s=M.size?"d":c.s;document.body.style.setProperty("--sc","var(--"+s+")");
+ if(!Q[0].length){m.innerHTML=`<div class="msg">Press New questions.</div>`;return}
+ fs();
+ m.innerHTML=["Standard","Challenge"].map((t,ci)=>`<section class="col ${$("sa").dataset.on?"ans":""}" style="--cc:${ci?"var(--ch)":"var(--"+s+")"}"><h2>${t}</h2>`+Q[ci].map((q,i)=>`<div class="q"><button class="n" data-c="${ci}" data-i="${i}" title="Swap this question">${i+1}</button><div class="t">${F(q[0])}<div class="a">${F(q[1])}</div></div></div>`).join("")+"</section>").join("")}
+$("nq").innerHTML=Array.from({length:10},(_,i)=>`<option ${i==4?"selected":""}>${i+1}</option>`).join("");
+$("ch").onchange=e=>{ci=+e.target.value;M.clear();mxl();Q=[[],[]];fillSub();draw()};
+$("sb").onchange=()=>{Q=[[],[]];draw()};$("nq").onchange=()=>{if(Q[0].length)gen()};
+$("go").onclick=gen;$("pr").onclick=()=>print();
+$("sa").onclick=e=>{const b=e.target;b.dataset.on=b.dataset.on?"":"1";b.textContent=b.dataset.on?"Hide answers":"Show answers";document.querySelectorAll(".col").forEach(c=>c.classList.toggle("ans",!!b.dataset.on))};
+$("m").onclick=e=>{const b=e.target.closest(".n");if(b){const c=+b.dataset.c,i=+b.dataset.i;Q[c][i]=one(c,c);draw();return}const t=e.target.closest(".t");if(t)t.parentElement.classList.toggle("open")};
+$("fm").onclick=()=>{FZ=Math.max(.5,+(FZ-.1).toFixed(2));fs()};$("fp").onclick=()=>{FZ=Math.min(2.2,+(FZ+.1).toFixed(2));fs()};
+const mxl=()=>$("mx").textContent=M.size?`Mix topics (${M.size})`:"Mix topics";
+function mixUI(){let h=`<div class=bar>${["d","f","a","p"].map(s=>`<button class=act data-s=${s} style="background:var(--${s})">All ${SN[s]}</button>`).join("")}<button class=act data-s=x>Clear mix</button><button class=act data-s=d_>Done</button></div>`;
+ CH.forEach((c,ci)=>{const ks=c.sb.map((_,i)=>KK(c,i)).filter(k=>G[k]),on=ks.filter(k=>M.has(k)).length;h+=`<details class="c${c.s}" data-o="${c.n}" ${mxo.has(""+c.n)?"open":""}><summary style="color:var(--${c.s})"><input type=checkbox data-c=${ci} ${on&&on==ks.length?"checked":""} ${on&&on<ks.length?"data-p=1":""} title="Select whole chapter"> ${c.n}. ${c.nm}${on?` <small>(${on}/${ks.length})</small>`:""}</summary>`+c.sb.map((s,i)=>{const k=KK(c,i);return`<label class="c${c.s}" style="display:block;margin-left:18px"><input type=checkbox data-k="${k}" ${M.has(k)?"checked":""}> ${s}</label>`}).join("")+"</details>"});
+ $("mix").innerHTML=h;$("mix").querySelectorAll("input[data-p]").forEach(i=>i.indeterminate=true);mxl()}
+const mxo=new Set();
+$("hc").onclick=()=>{const h=document.body.classList.toggle("hid");$("hc").textContent=h?"Show controls":"Hide controls"};
+$("mx").onclick=()=>{const m=$("mix");m.hidden=!m.hidden;if(!m.hidden)mixUI()};
+$("mix").onclick=e=>{const t=e.target,s=t.dataset.s;if(s=="d_")$("mix").hidden=true;else if(s){if(s=="x")M.clear();else CH.forEach(c=>{if(c.s==s)c.sb.forEach((_,i)=>M.add(KK(c,i)))});mixUI();Q=[[],[]];draw()}else if(t.dataset.c!==undefined){const c=CH[+t.dataset.c];c.sb.forEach((_,i)=>{const k=KK(c,i);t.checked?M.add(k):M.delete(k)});mxo.clear();$("mix").querySelectorAll("details[open]").forEach(d=>mxo.add(d.dataset.o));mixUI();Q=[[],[]];draw()}else if(t.dataset.k){t.checked?M.add(t.dataset.k):M.delete(t.dataset.k);mxl();Q=[[],[]];draw()}};
+build();draw();
+</script></body></html>

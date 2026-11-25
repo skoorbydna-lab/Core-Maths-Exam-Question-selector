@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AQA Core Maths Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#1a0f3a;--bg2:#3b1c7a;--card:rgba(255,255,255,.08);--line:rgba(255,255,255,.14);--ink:#fff;--mut:rgba(255,255,255,.65);
+--a:#ff5d8f;--b:#4cc9f0;--c:#ffd23f;--d:#7bd389;--good:#3ddc84;--bad:#ff4d6d;--acc:#ffd23f}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:Fredoka,system-ui,sans-serif;color:var(--ink);background:radial-gradient(1200px 700px at 20% -10%,#5a2bb0 0,transparent 60%),linear-gradient(160deg,var(--bg1),var(--bg2));min-height:100vh;-webkit-tap-highlight-color:transparent}
+#app{max-width:600px;margin:0 auto;padding:18px 16px 40px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;backdrop-filter:blur(6px)}
+.logo{font-size:44px;font-weight:700;letter-spacing:.5px;text-align:center;line-height:1.05;margin:10px 0 4px}
+.logo span{color:var(--acc)}
+.sub{text-align:center;color:var(--mut);margin:0 0 22px}
+label{display:block;font-size:14px;color:var(--mut);margin-bottom:14px}
+input,select{font:inherit;font-size:18px;width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:rgba(0,0,0,.25);color:#fff;outline:none;margin-top:6px}
+input:focus,select:focus{border-color:var(--acc)}
+select option{color:#000}
+button{font:inherit;cursor:pointer;border:0;border-radius:16px;padding:14px 18px;font-size:18px;font-weight:600;color:#1a0f3a;background:#fff;transition:transform .08s,filter .15s}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.45;cursor:not-allowed}
+.big{width:100%;font-size:20px;padding:16px}
+.primary{background:var(--acc)}
+.ghost{background:transparent;color:#fff;border:2px solid var(--line)}
+.row{display:flex;gap:10px;align-items:stretch;margin:12px 0}
+.row input{margin:0;text-transform:uppercase;letter-spacing:6px;text-align:center;font-weight:600}
+.row button{flex:0 0 auto}
+.or{text-align:center;color:var(--mut);font-size:14px;margin:14px 0 4px}
+.note{font-size:14px;color:var(--mut);background:rgba(0,0,0,.2);border-radius:12px;padding:10px 12px;margin-top:14px;line-height:1.4}
+.err{color:#ffb3c1;margin-top:12px;text-align:center}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.chip{display:inline-block;background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;font-size:14px;font-weight:500}
+.leave{background:transparent;color:var(--mut);padding:6px 10px;font-size:14px;border:1px solid var(--line)}
+.code{font-size:56px;font-weight:700;letter-spacing:12px;text-align:center;color:var(--acc);margin:4px 0 0}
+.center{text-align:center}
+.mut{color:var(--mut)}
+h2{margin:0 0 10px;font-size:22px}
+.players{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+.pl{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.22);border-radius:999px;padding:5px 12px 5px 5px;font-weight:500}
+.av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#1a0f3a;flex:0 0 auto;font-size:15px}
+.pl.done{outline:2px solid var(--good)}
+.tick{color:var(--good);font-weight:700}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.settings label{margin:0;font-size:13px}
+.settings select{font-size:16px;padding:10px}
+.timer{height:10px;background:rgba(0,0,0,.3);border-radius:99px;overflow:hidden;margin:6px 0 14px}
+.timer i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--acc),var(--a));border-radius:99px;transition:width .15s linear}
+.tnum{font-size:22px;font-weight:700;min-width:36px;text-align:right}
+.qtext{font-size:26px;font-weight:600;line-height:1.25;margin:6px 0 20px;min-height:66px}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.opt{min-height:88px;font-size:19px;line-height:1.2;color:#1a0f3a;padding:12px;border-radius:18px;box-shadow:0 5px 0 rgba(0,0,0,.25);word-break:break-word}
+.opt:nth-child(1){background:var(--a)}.opt:nth-child(2){background:var(--b)}.opt:nth-child(3){background:var(--c)}.opt:nth-child(4){background:var(--d)}
+.opts.locked .opt{opacity:.35;cursor:default}
+.opts.locked .opt.mine{opacity:1;outline:4px solid #fff}
+.opts.timeup .opt:not(.mine){opacity:.35;cursor:default}
+.opts.reveal .opt{opacity:.3;cursor:default}
+.opts.reveal .opt.right{opacity:1;outline:4px solid var(--good)}
+.opts.reveal .opt.mine.wrong{opacity:.9;outline:4px solid var(--bad)}
+.status{text-align:center;margin:16px 0 4px;font-size:18px;min-height:26px}
+.result{font-size:30px;font-weight:700;text-align:center;margin:14px 0 4px}
+.result.good{color:var(--good)}.result.bad{color:#ffb3c1}
+.board{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.br{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border-radius:14px;padding:8px 12px}
+.br.me{outline:2px solid var(--acc)}
+.br .rk{width:28px;text-align:center;font-weight:700;color:var(--mut)}
+.br .nm{flex:1;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.br .dl{font-size:14px;width:56px;text-align:right}
+.br .sc{font-weight:700;width:64px;text-align:right}
+.dl.g{color:var(--good)}.dl.b{color:#ffb3c1}
+.count{font-size:110px;font-weight:700;text-align:center;color:var(--acc);line-height:1;margin:20px 0}
+.win{font-size:34px;font-weight:700;text-align:center;margin:6px 0}
+.btns{display:flex;flex-direction:column;gap:10px;margin-top:18px}
+.you{font-size:12px;color:var(--acc);margin-left:4px}
+.daily{margin-bottom:16px;background:linear-gradient(135deg,rgba(255,210,63,.18),rgba(255,93,143,.12));border-color:rgba(255,210,63,.35)}
+.dhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.dtitle{font-size:24px;font-weight:700}
+.dstat{margin:8px 0 14px;line-height:1.4}
+.drow{display:flex;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap}
+.link{background:transparent;color:#fff;padding:6px 2px;font-size:16px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:12px 0 18px}
+.stats div{background:rgba(0,0,0,.22);border-radius:14px;padding:10px;text-align:center}
+.stats b{display:block;font-size:24px}
+.stats span{font-size:13px;color:var(--mut)}
+.tabs{display:flex;gap:6px;background:rgba(0,0,0,.25);padding:5px;border-radius:14px}
+.tab{flex:1;background:transparent;color:#fff;padding:10px 6px;font-size:16px;border-radius:10px}
+.tab.on{background:var(--acc);color:#1a0f3a}
+.winner{background:linear-gradient(135deg,#ffd23f,#ff9f43);color:#1a0f3a;border-radius:18px;padding:14px 16px;margin-bottom:14px;text-align:center;font-size:18px;line-height:1.35;cursor:pointer;box-shadow:0 6px 0 rgba(0,0,0,.2)}
+.winner span{font-size:14px}
+.winner.small{font-size:15px;padding:10px 12px;margin:12px 0 4px;box-shadow:none;cursor:default}
+@media (max-width:420px){.qtext{font-size:22px}.opt{font-size:17px;min-height:78px}.logo{font-size:38px}.code{font-size:46px}.settings{grid-template-columns:1fr}}
+
+.settings .wide{grid-column:1/-1}
+.tabs.small .tab{padding:7px 6px;font-size:14px}
+.qtext{font-size:24px;min-height:0;overflow-x:auto}
+.qtext svg{max-width:100%;max-height:36vh;display:block;margin:10px auto 0;stroke:currentColor}
+svg text{fill:currentColor;stroke:none;font:14px Fredoka,system-ui,sans-serif}
+sup{font-size:.65em}
+.opt{font-size:21px;font-weight:600}
+.opts.n2{grid-template-columns:1fr 1fr}
+.opts.n3 .opt:nth-child(3){grid-column:1/-1}
+.ansb{color:#fff;font-size:20px}
+.timer i.low{background:linear-gradient(90deg,#ff4d6d,#ff8fab)}
+.br .nm small{display:block;font-size:12px;color:var(--mut);font-weight:400;overflow:hidden;text-overflow:ellipsis}
+.rv{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border-radius:12px;padding:7px 12px;font-size:15px}
+.rv .rk{width:22px;font-weight:700}.rv.g .rk{color:var(--good)}.rv.b .rk{color:#ffb3c1}
+.rv .rq{flex:1}.rv .sc{font-weight:700}
+input.ini{text-transform:uppercase;letter-spacing:10px;text-align:center;font-size:30px;font-weight:700}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:#1a0f3a;padding:12px 18px;border-radius:14px;font-weight:600;z-index:9}
+
+/* maths layout from the Skills Checker */
+sup{font-size:.65em;line-height:0}
+.fr{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.25;margin:0 2px}
+.fr>i{font-style:normal;border-bottom:1.5px solid currentColor;padding:0 3px}.fr>b{font-weight:400;padding:0 3px}
+.rt{display:inline-flex;align-items:stretch;margin:0 2px}.rt .rd{width:.62em;font-weight:400;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M2 60 L20 54 L44 94 L100 3' fill='none' stroke='black' stroke-width='2.4' vector-effect='non-scaling-stroke' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M2 60 L20 54 L44 94 L100 3' fill='none' stroke='black' stroke-width='2.4' vector-effect='non-scaling-stroke' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% 100% no-repeat}.rt .rc{font-style:normal;border-top:.075em solid currentColor;padding:0 .12em 0 .04em;margin-left:-.04em}
+.mx{display:inline-grid;vertical-align:middle;border-left:2px solid currentColor;border-right:2px solid currentColor;border-radius:7px;padding:0 7px;margin:0 3px;gap:0 14px;line-height:1.45;text-align:center}.mx i{font-style:normal}
+.qtext{font-size:23px;font-weight:500;line-height:1.5}
+.opt{font-size:20px;font-weight:600;line-height:1.35}
+.opt .fr>i,.ansb .fr>i,.rv .fr>i{border-bottom-color:currentColor}
+.opts.long{grid-template-columns:1fr}.opts.long .opt{min-height:62px;text-align:left;padding:12px 16px}
+.tchip{max-width:46%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ctabs .tab{font-size:14px;padding:8px 4px}
+.sites{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:0 0 6px}
+.sites a{color:#fff;text-decoration:none;font-size:14px;font-weight:500;border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:rgba(0,0,0,.2)}
+.sites a:hover{border-color:var(--acc);color:var(--acc)}
+sub{font-size:.65em}
+@media (max-width:420px){.qtext{font-size:20px}.opt{font-size:18px}.ctabs .tab{font-size:12.5px}}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="core-gen.js"></script>
+<script>
+// ===== Multiple-choice builder for the Core Maths generators =====
+const MC=(()=>{
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),P=a=>a[R(0,a.length-1)];
+const plain=raw=>F(String(raw)).replace(/<sup>/g,'^').replace(/<sub>/g,'_').replace(/<[^>]+>/g,' ').replace(/&#8203;/g,'√').replace(/&lt;/g,'<').replace(/\s+/g,' ').trim();
+const norm=raw=>plain(raw).replace(/\s+/g,'').replace(/-/g,'−').toLowerCase();
+const BAD_Q=/\b(show that|prove|explain|sketch|describe|comment|compare|interpret|justify|why|draw|verify|suggest|criticis|give a reason|give two|misleading|state what|in context|how would)/i;
+const unc=s=>String(s).replace(/(\d),(?=\d{3}(?!\d))/g,'$1');
+const com=s=>s.replace(/(?<![\d.])\d{4,}(?=(\.\d+)?(?!\d))/g,(m,_,o,t)=>m.length>4||/[£€$] ?$|CHF $/.test(t.slice(0,o))?Number(m).toLocaleString('en-GB'):m);
+const dps=s=>{const i=s.indexOf('.');return i<0?0:s.length-i-1};
+function nudge(v,s){
+  const k=dps(s),u=10**-k,c=[];
+  if(k==0){
+    const step=v>=1000?10**(Math.floor(Math.log10(v))-1):v>=100?P([1,10]):v>=20?P([1,2,10]):1;
+    c.push(v+step,v-step,v+2*step,v-2*step);
+    if(v%2==0&&v>2)c.push(v/2);if(v>1&&v<60)c.push(v*2);
+  }else{
+    const n=Math.round(v/u),sp=[1,-1,2,-2,3,-3,10,-10];if(n>200)sp.push(Math.round(n*.1),-Math.round(n*.1));
+    sp.forEach(d=>c.push((n+d)*u));
+  }
+  const ok=c.filter(x=>x>=0&&Math.abs(x-v)>1e-9&&(k||Number.isInteger(x)));
+  const x=P(ok.length?ok:[v+(k?u:1)]);return k?x.toFixed(k):String(Math.round(x));
+}
+const TOK=/\d+(?:\.\d+)?/g;
+function perturb(a,qnums){
+  const s=String(a),slots=[];let m;TOK.lastIndex=0;
+  while((m=TOK.exec(s))){const pre=s.slice(Math.max(0,m.index-2),m.index);if(/_\{?$/.test(pre))continue;slots.push([m.index,m[0]])}
+  if(!slots.length)return null;
+  let pool=slots.filter(x=>!qnums.has(x[1]));if(!pool.length||Math.random()<.15)pool=slots;
+  const t=P(pool);return s.slice(0,t[0])+nudge(+t[1],t[1])+s.slice(t[0]+t[1].length);
+}
+const valueOf=raw=>{const p=plain(raw).replace(/[£\s]/g,'').replace(/−/g,'-');return/^-?\d+(\.\d+)?$/.test(p)?+p:null};
+function build(f,L){
+  let q,a,w;try{[q,a,w]=f(L)}catch(e){return null}
+  if(typeof q!=='string'||typeof a!=='string')return null;
+  if(BAD_Q.test(plain(q)))return null;
+  const A=unc(a),pa=plain(A);
+  if(!pa||pa.length>95)return null;
+  const qnums=new Set(unc(q).match(TOK)||[]);
+  const seen=new Set([norm(A)]),val=valueOf(A),opts=[];
+  const add=h=>{if(opts.length>=3||!h)return;h=unc(h);const k=norm(h);if(!k||seen.has(k))return;const v=valueOf(h);if(val!=null&&v!=null&&(Math.abs(v-val)<1e-9||(v===0&&val!==0)))return;if(/NaN|Infinity|undefined/.test(h))return;seen.add(k);opts.push(h)};
+  (w||[]).forEach(add);
+  if(/\d/.test(pa))for(let i=0;i<50&&opts.length<3;i++)add(perturb(A,qnums));
+  if(opts.length<3)return null;
+  return{q,o:[A,...opts].map(com)};
+}
+return{build,plain,norm};
+})();
+</script>
+<script>
+
+(() => {
+const STR = ['d','f','a','p'];
+// written-answer subsections (compare, explain, comment) stay on the Skills Generator only
+const WR = new Set(['C:3:3','C:11:2','C:13:3','C:14:3','C:16:3']);
+const NQ = 10, REVEAL = 6000, COUNT = 3000;
+const R_ = (a,b) => a + Math.floor(Math.random()*(b-a+1)), P_ = a => a[R_(0, a.length-1)];
+const $app = document.getElementById('app');
+const ld = (k) => { try { return localStorage.getItem(k); } catch(e) { return null; } };
+const sv_ = (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} };
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = (n) => Number(n || 0).toLocaleString('en-GB');
+const ukDay = (t) => new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/London', year:'numeric', month:'2-digit', day:'2-digit'}).format(t || new Date());
+const dayUTC = (d) => { const [y,m,dd] = d.split('-').map(Number); return Date.UTC(y, m-1, dd); };
+const addDays = (d, n) => new Date(dayUTC(d) + n*864e5).toISOString().slice(0,10);
+const weekStart = (d) => addDays(d, -((new Date(dayUTC(d)).getUTCDay() + 6) % 7)); // Monday
+const pretty = (d) => new Date(dayUTC(d)).toLocaleDateString('en-GB', {day:'numeric', month:'short', timeZone:'UTC'});
+function shuffle(a){ a = a.slice(); for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+const chLabel = (c) => c.n + '. ' + c.nm;
+const keysOf = (c) => c.sb.map((_, i) => KK(c, i)).filter(k => G[k] && !WR.has(k));
+const chapters = (strand) => CH.filter(c => (strand === 'all' || c.s === strand) && keysOf(c).length);
+
+// ---------- Question selection: questions 1-5 Standard, 6-10 Challenge ----------
+function parSecs(q, L){
+  let t = L ? 70 : 40;
+  if (MC.plain(q.q).length > 110) t += 10;
+  if (Math.max(...q.o.map(o => MC.plain(o).length)) > 40) t += 10;
+  return Math.min(120, t);
+}
+function makeQuiz(strand, chap){
+  const chs = chap === 'all' ? chapters(strand) : CH.filter(c => chLabel(c) === chap);
+  const keys = chs.flatMap(c => keysOf(c).map(k => ({k, c})));
+  if (!keys.length) return [];
+  const used = new Set(), usedK = new Map(), usedC = new Map(), out = [];
+  for (let i = 0; i < NQ; i++){
+    const L = i < NQ/2 ? 0 : 1;
+    let made = null;
+    for (let tries = 0; tries < 60 && !made; tries++){
+      let pool = keys.filter(x => !usedK.get(x.k));
+      if (!pool.length) pool = keys;
+      if (chap === 'all' && tries < 30){ const fresh = pool.filter(x => !usedC.get(x.c)); if (fresh.length) pool = fresh; }
+      const x = P_(pool);
+      const fns = L && GC[x.k] ? [].concat(GC[x.k]) : [].concat(G[x.k]);
+      const m = MC.build(P_(fns), L);
+      if (!m) continue;
+      const nk = MC.norm(m.q); if (used.has(nk)) continue;
+      used.add(nk); usedK.set(x.k, (usedK.get(x.k) || 0) + 1); usedC.set(x.c, (usedC.get(x.c) || 0) + 1);
+      made = {...m, topic: x.c.short || x.c.nm, L};
+    }
+    if (made){
+      const order = shuffle(made.o.map((_, j) => j));
+      made.opts = order.map(j => made.o[j]); made.right = order.indexOf(0); made.par = parSecs(made, made.L);
+      out.push(made);
+    }
+  }
+  return out;
+}
+
+// ---------- State ----------
+const st = {screen:'home', strand: ld('cq_strand') || 'all', chap: 'all', secs: +(ld('cq_secs') ?? 0) || 0,
+  quiz: null, qi: 0, ph: 'c', t0: 0, ans: [], quitArm: 0};
+if (st.strand !== 'all' && !SN[st.strand]) st.strand = 'all';
+let lastHtml = '';
+const qSecs = (q) => st.secs ? st.secs : q.par;
+function points(a){ if (!a || !a.ok) return 0; return 500 + Math.round(500 * Math.max(0, 1 - a.ms / (a.par*1000))); }
+function total(){ return st.ans.reduce((s, a) => s + points(a), 0); }
+function correct(){ return st.ans.filter(a => a && a.ok).length; }
+function label(){ return st.chap === 'all' ? (st.strand === 'all' ? 'All topics' : SN[st.strand]) : st.chap; }
+
+// ---------- Rendering ----------
+const NAV = `<nav class="sites"><a href="index.html">📝 Exam Question Selector</a><a href="skills.html">✅ Skills Generator</a></nav>`;
+function render(){
+  if (st.screen === 'home') return NAV + renderHome();
+  if (st.screen === 'quiz') return renderQuiz();
+  if (st.screen === 'over') return renderOver();
+  return '';
+}
+function selG(id, head, chs, val){
+  const o = ([v, l]) => `<option value="${esc(v)}" ${String(v) === String(val) ? 'selected' : ''}>${esc(l)}</option>`;
+  return `<select id="${id}">${head.map(o).join('')}${STR.map(s => { const g = chs.filter(c => c.s === s); return g.length ? `<optgroup label="${SN[s]}">${g.map(c => o([chLabel(c), chLabel(c)])).join('')}</optgroup>` : ''; }).join('')}</select>`;
+}
+function sel(id, opts, val){ return `<select id="${id}">${opts.map(([v, l]) => `<option value="${esc(v)}" ${String(v) === String(val) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select>`; }
+function renderHome(){
+  const strands = STR.filter(s => chapters(s).length);
+  if (st.strand !== 'all' && !strands.includes(st.strand)) st.strand = 'all';
+  const chs = chapters(st.strand);
+  if (st.chap !== 'all' && !chs.some(c => chLabel(c) === st.chap)) st.chap = 'all';
+  const chHead = [['all', st.strand === 'all' ? 'Mixed – every chapter' : 'Mixed – all ' + SN[st.strand]]];
+  return `<div class="logo">Σ Core Maths <span>Quiz</span></div>
+  <p class="sub">10 AQA Core Maths questions against the clock. Fast and right scores most.</p>
+  <div class="card">
+    <div class="settings">
+      <label>Topic area${sel('strand', [['all','All topic areas'], ...strands.map(s => [s, SN[s]])], st.strand)}</label>
+      <label>Time each${sel('secs', [[0,'Auto – by difficulty'],[30,'30 s'],[45,'45 s'],[60,'60 s'],[90,'90 s'],[120,'120 s']], st.secs)}</label>
+      <label class="wide">Chapter${selG('chap', chHead, chs, st.chap)}</label>
+    </div>
+    <button class="big primary" data-act="start">Start quiz</button>
+    <p class="note">Questions 1–5 are Standard and 6–10 are Challenge. A right answer scores 500, plus up to 500 more for speed — Challenge questions get longer. Have a pen, paper and calculator ready.</p>
+  </div>`;
+}
+function renderQuiz(){
+  const q = st.quiz[st.qi], head = `<div class="top"><span class="chip">${esc(label())}</span><button class="leave" data-act="quit">${Date.now() - (st.quitArm || 0) < 4000 ? 'Tap again to quit' : 'Quit'}</button></div>`;
+  if (st.ph === 'c') return head + `<div class="card center"><h2>Get ready!</h2><p class="mut">${st.quiz.length} questions · ${st.secs ? st.secs + 's each' : 'timer set by difficulty'}</p><div class="count" id="tnum">3</div><p class="mut">Work it out, then tap your answer.</p></div>`;
+  const a = st.ans[st.qi], reveal = st.ph === 'r';
+  const long = q.opts.some(o => MC.plain(o).length > 26);
+  const btns = q.opts.map((o, i) => {
+    const c = ['opt']; if (a && a.i === i) c.push('mine'); if (reveal && i === q.right) c.push('right'); if (reveal && a && a.i === i && i !== q.right) c.push('wrong');
+    return `<button class="${c.join(' ')}" data-act="ans" data-i="${i}">${F(o)}</button>`;
+  }).join('');
+  let below = '';
+  if (reveal){
+    const pts = points(a);
+    below = `<div class="result ${pts ? 'good' : 'bad'}">${pts ? '+' + pts + ' points!' : a && a.i != null ? 'Not quite!' : "Time's up!"}</div>
+      ${pts ? '' : `<p class="center mut" style="margin:0">Answer: <b class="ansb">${F(q.o[0])}</b></p>`}
+      <p class="center mut" style="margin:10px 0 0">Score: <b style="color:#fff">${fmt(total())}</b></p>
+      <button class="big primary" style="margin-top:14px" data-act="next">${st.qi + 1 < st.quiz.length ? 'Next question' : 'See my score'} ▶</button>`;
+  }
+  return head + `<div class="top" style="margin-bottom:4px"><span class="chip">Q${st.qi+1} of ${st.quiz.length} · ${q.L ? 'Challenge' : 'Standard'}</span><span class="chip tchip">${esc(q.topic)}</span><span class="tnum" id="tnum"></span></div>
+    <div class="timer"><i id="tbar"></i></div>
+    <div class="qtext">${F(q.q)}</div>
+    <div class="opts ${long ? 'long' : ''} ${reveal ? 'reveal' : a ? 'locked' : ''}" id="opts">${btns}</div>${below}`;
+}
+function renderOver(){
+  const s = total(), c = correct();
+  const rows = st.quiz.map((q, i) => { const a = st.ans[i], ok = a && a.ok;
+    return `<div class="rv ${ok ? 'g' : 'b'}"><span class="rk">${ok ? '✓' : '✗'}</span><span class="rq">${i+1}. ${esc(q.topic)}${ok ? '' : ` — answer <b>${F(q.o[0])}</b>`}</span><span class="sc">${points(a)}</span></div>`; }).join('');
+  return `<div class="top"><span class="chip">${esc(label())}</span><button class="leave" data-act="home">Home</button></div>
+  <div class="card"><div class="win">${fmt(s)} points</div>
+    <p class="center mut" style="margin:0 0 14px">${c} out of ${st.quiz.length} correct</p>
+    <div class="board" style="margin-top:18px">${rows}</div>
+    <div class="btns"><button class="big primary" data-act="start">Play again</button><button class="big ghost" data-act="home">Change topic</button></div></div>`;
+}
+function update(){
+  const html = render();
+  if (html !== lastHtml){ lastHtml = html; $app.innerHTML = html; }
+  tickVisuals();
+}
+function tickVisuals(){
+  if (st.screen !== 'quiz') return;
+  const el = Date.now() - st.t0, tot = st.ph === 'q' ? qSecs(st.quiz[st.qi])*1000 : COUNT, left = Math.max(0, tot - el);
+  const bar = document.getElementById('tbar'); if (bar) bar.style.width = (st.ph === 'q' ? left/tot*100 : 0) + '%';
+  const tn = document.getElementById('tnum'); if (tn) tn.textContent = st.ph === 'r' ? '' : Math.max(st.ph === 'c' ? 1 : 0, Math.ceil(left/1000));
+  if (bar) bar.classList.toggle('low', st.ph === 'q' && left < 5000);
+}
+
+// ---------- Game loop ----------
+function tick(){
+  if (st.screen !== 'quiz') return;
+  const el = Date.now() - st.t0;
+  if (st.quitArm && Date.now() - st.quitArm > 4000){ st.quitArm = 0; update(); }
+  if (st.ph === 'c' && el >= COUNT){ st.ph = 'q'; st.t0 = Date.now(); update(); }
+  else if (st.ph === 'q' && el >= qSecs(st.quiz[st.qi])*1000 + 300){ if (!st.ans[st.qi]) st.ans[st.qi] = {i: null, ok: false, ms: 0, par: st.quiz[st.qi].par}; st.ph = 'r'; st.t0 = Date.now(); update(); }
+  else if (st.ph === 'r' && el >= REVEAL + (st.ans[st.qi] && st.ans[st.qi].ok ? 0 : 6000)) next();
+  tickVisuals();
+}
+setInterval(tick, 120);
+function next(){
+  if (st.qi + 1 < st.quiz.length){ st.qi++; st.ph = 'q'; st.t0 = Date.now(); }
+  else { st.screen = 'over'; }
+  update();
+}
+
+// ---------- Actions ----------
+const actions = {
+  start(){
+    const quiz = makeQuiz(st.strand, st.chap);
+    if (quiz.length < 3){ alertMsg('Not enough questions for that choice — try another chapter.'); return; }
+    st.quiz = quiz; st.qi = 0; st.ph = 'c'; st.t0 = Date.now(); st.ans = []; st.quitArm = 0; st.screen = 'quiz';
+    window.scrollTo(0, 0); update();
+  },
+  ans(el){
+    if (st.ph !== 'q' || st.ans[st.qi]) return;
+    const ms = Date.now() - st.t0, q = st.quiz[st.qi]; if (ms > qSecs(q)*1000) return;
+    const i = +el.dataset.i; st.ans[st.qi] = {i, ok: i === q.right, ms, par: q.par};
+    st.ph = 'r'; st.t0 = Date.now(); update();
+  },
+  next(){ if (st.ph === 'r') next(); },
+  quit(){ if (Date.now() - (st.quitArm || 0) > 4000){ st.quitArm = Date.now(); update(); return; } st.quitArm = 0; st.screen = 'home'; update(); },
+  home(){ st.screen = 'home'; update(); },
+};
+function alertMsg(m){ const n = document.createElement('div'); n.className = 'toast'; n.textContent = m; document.body.appendChild(n); setTimeout(() => n.remove(), 3500); }
+$app.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (!el || el.disabled) return; const f = actions[el.dataset.act]; if (f) f(el); });
+$app.addEventListener('change', e => {
+  const id = e.target.id;
+  if (id === 'strand'){ st.strand = e.target.value; st.chap = 'all'; sv_('cq_strand', st.strand); update(); }
+  if (id === 'chap'){ st.chap = e.target.value; update(); }
+  if (id === 'secs'){ st.secs = +e.target.value; sv_('cq_secs', st.secs); }
+});
+
+// ---------- Start ----------
+update();
+})();
+
+</script>
+</body>
+</html>

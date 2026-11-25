@@ -6,6 +6,9 @@
 :root{color-scheme:dark;--bg:#14171a;--card:#1f2428;--ink:#e8e8e4;--mut:#9aa4aa;--acc:#6bb3e0;--line:#343c42;--e:#7bc47f;--m:#e0a040;--h:#f08a82;--cd:#6bb3e0;--cf:#7bc47f;--ca:#b48ee0;--cp:#f08a82}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Georgia,serif}
 header{padding:18px 20px 0;border-bottom:1px solid var(--line);background:linear-gradient(#1b2025,var(--bg))}h1{margin:0 0 14px;font:400 26px/1.2 Georgia,serif;letter-spacing:.04em;color:var(--ink)}h1 .hl{color:var(--acc);font-weight:700}
+.hrow{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 20px;margin-bottom:14px}.hrow h1{margin:0}
+.xls{display:flex;flex-wrap:wrap;gap:8px}.qtab{display:inline-block;align-self:flex-end;font:600 14px sans-serif;color:#14171a;background:var(--acc);text-decoration:none;padding:9px 16px;border-radius:8px 8px 0 0;margin-left:6px}.qtab:hover{filter:brightness(1.1)}
+.xlink{font:600 14px sans-serif;color:var(--acc);text-decoration:none;border:1.5px solid var(--acc);border-radius:6px;padding:6px 12px;white-space:nowrap}.xlink:hover{background:var(--acc);color:#14171a}
 .tabs{display:flex;gap:4px;flex-wrap:wrap}.tabs button{font:600 14px sans-serif;padding:8px 16px;border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;background:none;color:var(--mut);cursor:pointer}
 .tabs button.on{background:var(--card);color:var(--ink);border-bottom:2px solid var(--card);margin-bottom:-1px}
 .wrap{display:flex;flex-wrap:wrap;gap:16px;padding:16px;max-width:1300px;margin:auto}
@@ -43,7 +46,7 @@ body.locked #gate{display:flex}body.locked>*:not(#gate){display:none}
 <input id="pw" type="password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')tryLogin()">
 <label><input id="rem" type="checkbox"> Remember me on this device</label>
 <button class="act" onclick="tryLogin()">Enter</button><div id="gmsg" style="font:13px sans-serif;color:var(--h);margin-top:10px;min-height:18px"></div></div></div>
-<header><h1><span class="hl">AQA Core Maths</span> Past Exam Question Selector</h1><div class="tabs" id="tabs"></div></header>
+<header><div class="hrow"><h1><span class="hl">AQA Core Maths</span> Past Exam Question Selector</h1><span class="xls"><a class="xlink" href="skills.html">Core Maths Skills Generator</a></span></div><div class="tabs" id="tabs"></div></header>
 <div class="wrap">
 <aside>
 <div class="box"><h3>Textbook chapter</h3><div class="lg"><b style="color:var(--cd)">&#9632; Data &amp; statistics</b><b style="color:var(--cf)">&#9632; Money &amp; finance</b><b style="color:var(--ca)">&#9632; Modelling &amp; analysis</b><b style="color:var(--cp)">&#9632; Paper 2A topics</b></div><div id="topics"></div></div>
@@ -82,7 +85,7 @@ const tabP=()=>(TABS.find(t=>t[0]==tab)||TABS[0])[1];
 const cur=()=>D.filter(q=>!tabP()||q.p==tabP());
 const bt=q=>Math.min(...q.t);
 function build(){
- tabs.innerHTML=TABS.map(([n,p])=>`<button class="${n==tab?'on':''}" data-l="${n}">${n} (${D.filter(q=>!p||q.p==p).length})</button>`).join('');
+ tabs.innerHTML=TABS.map(([n,p])=>`<button class="${n==tab?'on':''}" data-l="${n}">${n} (${D.filter(q=>!p||q.p==p).length})</button>`).join('')+'<a class="qtab" href="quiz.html">Quiz ▶</a>';
  const Q=cur(),tl=[...new Set(Q.flatMap(q=>q.t))].sort((a,b)=>a-b);let lg='';
  topics.innerHTML=tl.map(t=>{let h='';if(grp(t)!==lg){lg=grp(t);h='<div style="font:12px sans-serif;color:var(--mut);margin:8px 0 2px">'+GH[lg]+'</div>'}
   return h+`<button class="chip c${grp(t)}${fT.has(t)?' on':''}" data-t="${t}">${t}. ${CH[t]} (${Q.filter(q=>q.t.includes(t)).length})</button>`}).join('');
